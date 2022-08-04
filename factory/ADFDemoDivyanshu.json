@@ -1,0 +1,9 @@
+{
+	"name": "ADFDemoDivyanshu",
+	"location": "centralindia",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "b54aaba2-c306-4647-bb5b-cf13b84650b7",
+		"tenantId": "5954577c-22bd-4fd8-8369-f6a50fbf6d0a"
+	}
+}

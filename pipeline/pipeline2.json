@@ -1,0 +1,27 @@
+{
+	"name": "pipeline2",
+	"properties": {
+		"activities": [
+			{
+				"name": "Web1",
+				"type": "WebActivity",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "7.00:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"url": "https://www.99acres.com/search/property/buy/jaipur?city=177&keyword=jaipur&preference=S&area_unit=1&res_com=R",
+					"method": "GET"
+				}
+			}
+		],
+		"annotations": [],
+		"lastPublishTime": "2022-08-04T05:20:37Z"
+	},
+	"type": "Microsoft.DataFactory/factories/pipelines"
+}
