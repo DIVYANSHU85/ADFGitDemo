@@ -1,0 +1,24 @@
+{
+	"name": "OLTPssmsServer",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ssmsSQLserver",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sinkname": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "stg",
+			"table": {
+				"value": "@dataset().sinkname",
+				"type": "Expression"
+			}
+		}
+	}
+}
