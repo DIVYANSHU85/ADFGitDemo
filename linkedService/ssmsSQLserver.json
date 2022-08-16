@@ -1,0 +1,17 @@
+{
+	"name": "ssmsSQLserver",
+	"type": "Microsoft.DataFactory/factories/linkedservices",
+	"properties": {
+		"annotations": [],
+		"type": "SqlServer",
+		"typeProperties": {
+			"connectionString": "integrated security=True;data source=DESKTOP-TISBAU6\\SQLEXPRESS;initial catalog=task",
+			"userName": "DESKTOP-TISBAU6\\dell",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI0MTk3ZjJlMS1lYjJhLTQwZTYtOWVhZi05ZTZkMWFiOWE4YTEiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+		},
+		"connectVia": {
+			"referenceName": "selfHostedruntime",
+			"type": "IntegrationRuntimeReference"
+		}
+	}
+}
