@@ -1,0 +1,24 @@
+{
+	"name": "DBOTables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ssmsSQLserver",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sinkname": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().sinkname",
+				"type": "Expression"
+			}
+		}
+	}
+}

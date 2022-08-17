@@ -1,0 +1,12 @@
+{
+	"name": "STGtoDBO",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ssmsSQLserver",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}

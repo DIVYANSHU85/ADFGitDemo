@@ -1,0 +1,24 @@
+{
+	"name": "stgTOdbo1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ssmsSQLserver",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"sourcename": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "stg",
+			"table": {
+				"value": "@dataset().sourcename",
+				"type": "Expression"
+			}
+		}
+	}
+}

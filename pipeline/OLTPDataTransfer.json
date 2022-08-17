@@ -133,6 +133,10 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"pipeline": {
+						"referenceName": "OLAP_ETL",
+						"type": "PipelineReference"
+					},
 					"waitOnCompletion": true
 				}
 			}
