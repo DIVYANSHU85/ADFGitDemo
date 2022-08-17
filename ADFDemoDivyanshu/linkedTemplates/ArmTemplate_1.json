@@ -93,6 +93,76 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DBOTables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ssmsSQLserver",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"sinkname": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().sinkname",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OLTPssmsServer')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ssmsSQLserver",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"sinkname": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "stg",
+					"table": {
+						"value": "@dataset().sinkname",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/STGtoDBO')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ssmsSQLserver",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SqlServerResTable')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -186,52 +256,6 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/UnallotedTable')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "SqlServer1",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "dbo",
-					"table": "Unallot.csv"
-				}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/OLTPssmsServer')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ssmsSQLserver",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"sinkname": {
-						"type": "string"
-					}
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {
-					"schema": "stg",
-					"table": {
-						"value": "@dataset().sinkname",
-						"type": "Expression"
-					}
-				}
-			},
-			"dependsOn": []
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/SqlServerTable2')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -248,44 +272,20 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/STGtoDBO')]",
+			"name": "[concat(parameters('factoryName'), '/UnallotedTable')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"linkedServiceName": {
-					"referenceName": "ssmsSQLserver",
+					"referenceName": "SqlServer1",
 					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DBOTables')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "ssmsSQLserver",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"sinkname": {
-						"type": "string"
-					}
 				},
 				"annotations": [],
 				"type": "SqlServerTable",
 				"schema": [],
 				"typeProperties": {
 					"schema": "dbo",
-					"table": {
-						"value": "@dataset().sinkname",
-						"type": "Expression"
-					}
+					"table": "Unallot.csv"
 				}
 			},
 			"dependsOn": []
@@ -682,82 +682,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/DemoTrigger1_Schedule')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Daily Trigger",
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "pipeline1",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "ScheduleTrigger",
-				"typeProperties": {
-					"recurrence": {
-						"frequency": "Day",
-						"interval": 1,
-						"startTime": "2022-07-29T10:00:00",
-						"endTime": "2022-07-30T10:01:00",
-						"timeZone": "India Standard Time"
-					}
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pipeline1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/EventTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"pipelines": [
-					{
-						"pipelineReference": {
-							"referenceName": "pipeline1",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					},
-					{
-						"pipelineReference": {
-							"referenceName": "event",
-							"type": "PipelineReference"
-						},
-						"parameters": {}
-					}
-				],
-				"type": "BlobEventsTrigger",
-				"typeProperties": {
-					"blobPathBeginsWith": "/event/blobs/",
-					"ignoreEmptyBlobs": true,
-					"scope": "[parameters('EventTrigger_properties_typeProperties_scope')]",
-					"events": [
-						"Microsoft.Storage.BlobCreated"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/pipelines/pipeline1')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/OLAP_ETL')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Lookup1",
+						"name": "Lookup for SP-Name",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
@@ -784,11 +715,11 @@
 						}
 					},
 					{
-						"name": "ForEach1",
+						"name": "SP Execution",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup1",
+								"activity": "Lookup for SP-Name",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -797,13 +728,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup1').output.value",
+								"value": "@activity('Lookup for SP-Name').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "Stored procedure1",
+									"name": "Stored procedures",
 									"type": "SqlServerStoredProcedure",
 									"dependsOn": [],
 									"policy": {
@@ -829,11 +760,11 @@
 						}
 					},
 					{
-						"name": "Lookup2",
+						"name": "Lookup for STG tables",
 						"type": "Lookup",
 						"dependsOn": [
 							{
-								"activity": "ForEach1",
+								"activity": "SP Execution",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -863,11 +794,11 @@
 						}
 					},
 					{
-						"name": "ForEach2",
+						"name": "STG to DBO",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup2",
+								"activity": "Lookup for STG tables",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -876,13 +807,13 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup2').output.value",
+								"value": "@activity('Lookup for STG tables').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "Copy data1",
+									"name": "stg TO dbo",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -958,13 +889,82 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/DemoTrigger1_Schedule')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Daily Trigger",
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline1",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "ScheduleTrigger",
+				"typeProperties": {
+					"recurrence": {
+						"frequency": "Day",
+						"interval": 1,
+						"startTime": "2022-07-29T10:00:00",
+						"endTime": "2022-07-30T10:01:00",
+						"timeZone": "India Standard Time"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pipeline1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/EventTrigger')]",
+			"type": "Microsoft.DataFactory/factories/triggers",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"runtimeState": "Stopped",
+				"pipelines": [
+					{
+						"pipelineReference": {
+							"referenceName": "pipeline1",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					},
+					{
+						"pipelineReference": {
+							"referenceName": "event",
+							"type": "PipelineReference"
+						},
+						"parameters": {}
+					}
+				],
+				"type": "BlobEventsTrigger",
+				"typeProperties": {
+					"blobPathBeginsWith": "/event/blobs/",
+					"ignoreEmptyBlobs": true,
+					"scope": "[parameters('EventTrigger_properties_typeProperties_scope')]",
+					"events": [
+						"Microsoft.Storage.BlobCreated"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/pipelines/pipeline1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/OLTPDataTransfer')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Lookup1",
+						"name": "Lookup for ADLS raw datasets",
 						"type": "Lookup",
 						"dependsOn": [],
 						"policy": {
@@ -996,11 +996,11 @@
 						}
 					},
 					{
-						"name": "ForEach1",
+						"name": "ADLS to SQL Server",
 						"type": "ForEach",
 						"dependsOn": [
 							{
-								"activity": "Lookup1",
+								"activity": "Lookup for ADLS raw datasets",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -1009,7 +1009,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"items": {
-								"value": "@activity('Lookup1').output.value",
+								"value": "@activity('Lookup for ADLS raw datasets').output.value",
 								"type": "Expression"
 							},
 							"isSequential": true,
@@ -1083,11 +1083,11 @@
 						}
 					},
 					{
-						"name": "Execute Pipeline1",
+						"name": "Execution of OLAP_ETL",
 						"type": "ExecutePipeline",
 						"dependsOn": [
 							{
-								"activity": "ForEach1",
+								"activity": "ADLS to SQL Server",
 								"dependencyConditions": [
 									"Succeeded"
 								]
