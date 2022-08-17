@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "Lookup for ADLS raw datasets",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -34,11 +34,11 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "ADLS to SQL Server",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "Lookup for ADLS raw datasets",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -47,7 +47,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup1').output.value",
+						"value": "@activity('Lookup for ADLS raw datasets').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
@@ -121,11 +121,11 @@
 				}
 			},
 			{
-				"name": "Execute Pipeline1",
+				"name": "Execution of OLAP_ETL",
 				"type": "ExecutePipeline",
 				"dependsOn": [
 					{
-						"activity": "ForEach1",
+						"activity": "ADLS to SQL Server",
 						"dependencyConditions": [
 							"Succeeded"
 						]
