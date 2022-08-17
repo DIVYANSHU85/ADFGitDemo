@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup1",
+				"name": "Lookup for SP-Name",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -29,11 +29,11 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "SP Execution",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup1",
+						"activity": "Lookup for SP-Name",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -42,13 +42,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup1').output.value",
+						"value": "@activity('Lookup for SP-Name').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Stored procedure1",
+							"name": "Stored procedures",
 							"type": "SqlServerStoredProcedure",
 							"dependsOn": [],
 							"policy": {
@@ -74,11 +74,11 @@
 				}
 			},
 			{
-				"name": "Lookup2",
+				"name": "Lookup for STG tables",
 				"type": "Lookup",
 				"dependsOn": [
 					{
-						"activity": "ForEach1",
+						"activity": "SP Execution",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -107,11 +107,11 @@
 				}
 			},
 			{
-				"name": "ForEach2",
+				"name": "STG to DBO",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup2",
+						"activity": "Lookup for STG tables",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -120,13 +120,13 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup2').output.value",
+						"value": "@activity('Lookup for STG tables').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Copy data1",
+							"name": "stg TO dbo",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
