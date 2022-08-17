@@ -1,0 +1,33 @@
+{
+	"$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentParameters.json#",
+	"contentVersion": "1.0.0.0",
+	"parameters": {
+		"factoryName": {
+			"value": "ADFDemoDivyanshu"
+		},
+		"AzureBlobStorage1_connectionString": {
+			"value": ""
+		},
+		"SqlServer1_connectionString": {
+			"value": ""
+		},
+		"SqlServer1_password": {
+			"value": ""
+		},
+		"ssmsSQLserver_connectionString": {
+			"value": ""
+		},
+		"ssmsSQLserver_password": {
+			"value": ""
+		},
+		"SqlServer1_properties_typeProperties_userName": {
+			"value": "DESKTOP-TISBAU6\\dell"
+		},
+		"EventTrigger_properties_typeProperties_scope": {
+			"value": "/subscriptions/e4949961-e46f-4f60-bf96-032154cb62b7/resourceGroups/TestEnvironment/providers/Microsoft.Storage/storageAccounts/demostoragedivyanshu"
+		},
+		"ssmsSQLserver_properties_typeProperties_userName": {
+			"value": "DESKTOP-TISBAU6\\dell"
+		}
+	}
+}
