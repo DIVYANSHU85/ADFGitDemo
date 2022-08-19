@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select * from [StudentDetails.csv] order by GPA desc",
+						"sqlReaderQuery": "select * from StudentDetails order by GPA desc",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -101,7 +101,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select * from [Restable.csv] order by subid",
+						"sqlReaderQuery": "select * from Restable order by subid",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
@@ -161,7 +161,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "SqlServerSource",
-						"sqlReaderQuery": "select * from [Unallot.csv] order by StudentId",
+						"sqlReaderQuery": "select * from Unallot order by StudentId",
 						"queryTimeout": "02:00:00",
 						"partitionOption": "None"
 					},
