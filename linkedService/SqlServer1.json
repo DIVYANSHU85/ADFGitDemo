@@ -6,8 +6,8 @@
 		"type": "SqlServer",
 		"typeProperties": {
 			"connectionString": "integrated security=True;data source=DESKTOP-LIH9UQE\\SQLEXPRESS;initial catalog=ADFassignment",
-			"userName": "DESKTOP-TISBAU6\\divkr",
-			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiJlYmExN2FiMC0xMDBmLTQ4NDAtOWY4YS0yYWM2OWViYmQwNWYiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
+			"userName": "DESKTOP-LIH9UQE\\divkr",
+			"encryptedCredential": "eyJDcmVkZW50aWFsSWQiOiI1ZGY1MGEyMS03YTBlLTRmM2EtOTYzNC02MWVlYmY3NzdlN2QiLCJWZXJzaW9uIjoiMi4wIiwiQ2xhc3NUeXBlIjoiTWljcm9zb2Z0LkRhdGFQcm94eS5Db3JlLkludGVyU2VydmljZURhdGFDb250cmFjdC5DcmVkZW50aWFsU1UwNkNZMTQifQ=="
 		},
 		"connectVia": {
 			"referenceName": "selfHostedIRnew",
