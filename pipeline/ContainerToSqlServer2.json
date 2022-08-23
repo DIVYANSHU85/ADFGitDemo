@@ -27,14 +27,14 @@
 						}
 					},
 					"dataset": {
-						"referenceName": "DelimitedText2",
+						"referenceName": "RAWtables",
 						"type": "DatasetReference"
 					},
 					"firstRowOnly": false
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "ADLS to SQL Server",
 				"type": "ForEach",
 				"dependsOn": [
 					{
@@ -53,7 +53,7 @@
 					"isSequential": true,
 					"activities": [
 						{
-							"name": "Copy data1",
+							"name": "Coping Raw Tables",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -94,11 +94,11 @@
 							},
 							"inputs": [
 								{
-									"referenceName": "sqltable",
+									"referenceName": "RawTable",
 									"type": "DatasetReference",
 									"parameters": {
-										"filename": {
-											"value": "@item().Filename",
+										"SourceName": {
+											"value": "@item().Sourcename",
 											"type": "Expression"
 										}
 									}
@@ -106,11 +106,11 @@
 							],
 							"outputs": [
 								{
-									"referenceName": "SqlServerTable1",
+									"referenceName": "RawSQLTables",
 									"type": "DatasetReference",
 									"parameters": {
-										"filename": {
-											"value": "@item().sinkname",
+										"SinkName": {
+											"value": "@item().Sinkname",
 											"type": "Expression"
 										}
 									}
