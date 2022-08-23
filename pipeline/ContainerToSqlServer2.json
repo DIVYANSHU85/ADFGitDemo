@@ -1,5 +1,5 @@
 {
-	"name": "FinalTask_ADLStoSQLServer",
+	"name": "ContainerToSqlServer2",
 	"properties": {
 		"activities": [
 			{
