@@ -1,0 +1,12 @@
+{
+	"name": "SP_NAMES",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "FinalTask",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": []
+	}
+}
