@@ -8,6 +8,12 @@
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
+		"FinalTask_connectionString": {
+			"value": ""
+		},
+		"FinalTask_password": {
+			"value": ""
+		},
 		"SqlServer1_connectionString": {
 			"value": ""
 		},
@@ -20,11 +26,14 @@
 		"ssmsSQLserver_password": {
 			"value": ""
 		},
+		"FinalTask_properties_typeProperties_userName": {
+			"value": "DESKTOP-LIH9UQE\\divkr"
+		},
 		"SqlServer1_properties_typeProperties_userName": {
-			"value": "DESKTOP-TISBAU6\\dell"
+			"value": "DESKTOP-LIH9UQE\\divkr"
 		},
 		"ssmsSQLserver_properties_typeProperties_userName": {
-			"value": "DESKTOP-TISBAU6\\dell"
+			"value": "DESKTOP-LIH9UQE\\divkr"
 		},
 		"EventTrigger_properties_typeProperties_scope": {
 			"value": "/subscriptions/e4949961-e46f-4f60-bf96-032154cb62b7/resourceGroups/TestEnvironment/providers/Microsoft.Storage/storageAccounts/demostoragedivyanshu"

@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"FinalTask_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'FinalTask'"
+		},
+		"FinalTask_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FinalTask'"
+		},
 		"SqlServer1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
@@ -27,13 +35,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ssmsSQLserver'"
 		},
+		"FinalTask_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
+		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "DESKTOP-TISBAU6\\dell"
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
 		},
 		"ssmsSQLserver_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "DESKTOP-TISBAU6\\dell"
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
 		},
 		"EventTrigger_properties_typeProperties_scope": {
 			"type": "string",
@@ -69,6 +81,12 @@
 					"AzureBlobStorage1_connectionString": {
 						"value": "[parameters('AzureBlobStorage1_connectionString')]"
 					},
+					"FinalTask_connectionString": {
+						"value": "[parameters('FinalTask_connectionString')]"
+					},
+					"FinalTask_password": {
+						"value": "[parameters('FinalTask_password')]"
+					},
 					"SqlServer1_connectionString": {
 						"value": "[parameters('SqlServer1_connectionString')]"
 					},
@@ -80,6 +98,9 @@
 					},
 					"ssmsSQLserver_password": {
 						"value": "[parameters('ssmsSQLserver_password')]"
+					},
+					"FinalTask_properties_typeProperties_userName": {
+						"value": "[parameters('FinalTask_properties_typeProperties_userName')]"
 					},
 					"SqlServer1_properties_typeProperties_userName": {
 						"value": "[parameters('SqlServer1_properties_typeProperties_userName')]"
@@ -104,6 +125,26 @@
 				"parameters": {
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
+					}
+				}
+			},
+			"dependsOn": [
+				"[resourceId('Microsoft.Resources/deployments', 'ADFDemoDivyanshu_ArmTemplate_0')]"
+			]
+		},
+		{
+			"name": "ADFDemoDivyanshu_ArmTemplate_2",
+			"type": "Microsoft.Resources/deployments",
+			"apiVersion": "2018-02-01",
+			"properties": {
+				"mode": "incremental",
+				"templateLink": {
+					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_2.json', parameters('containerSasToken'))]",
+					"contentVersion": "1.0.0.0"
+				},
+				"parameters": {
+					"factoryName": {
+						"value": "[parameters('factoryName')]"
 					},
 					"EventTrigger_properties_typeProperties_scope": {
 						"value": "[parameters('EventTrigger_properties_typeProperties_scope')]"
@@ -111,7 +152,7 @@
 				}
 			},
 			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'ADFDemoDivyanshu_ArmTemplate_0')]"
+				"[resourceId('Microsoft.Resources/deployments', 'ADFDemoDivyanshu_ArmTemplate_1')]"
 			]
 		}
 	]

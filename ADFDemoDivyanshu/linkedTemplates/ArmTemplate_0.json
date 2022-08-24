@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"FinalTask_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'FinalTask'"
+		},
+		"FinalTask_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FinalTask'"
+		},
 		"SqlServer1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
@@ -27,13 +35,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ssmsSQLserver'"
 		},
+		"FinalTask_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
+		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "DESKTOP-TISBAU6\\dell"
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
 		},
 		"ssmsSQLserver_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "DESKTOP-TISBAU6\\dell"
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
 		}
 	},
 	"variables": {
@@ -135,7 +147,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/selfHostedruntime')]",
+			"name": "[concat(parameters('factoryName'), '/selfHostedIRnew')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -285,6 +297,71 @@
 						"fileName": "HR_output.csv",
 						"folderPath": "Output",
 						"container": "hrcontainer"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RAWtables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Tables.csv",
+						"container": "finaltask"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RawTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourceName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().SourceName",
+							"type": "Expression"
+						},
+						"folderPath": "Input",
+						"container": "finaltask"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -460,6 +537,30 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FinalTask')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('FinalTask_connectionString')]",
+					"userName": "[parameters('FinalTask_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FinalTask_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "selfHostedIRnew",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedIRnew')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -475,12 +576,12 @@
 					}
 				},
 				"connectVia": {
-					"referenceName": "selfHostedruntime",
+					"referenceName": "selfHostedIRnew",
 					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedruntime')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedIRnew')]"
 			]
 		},
 		{
@@ -499,182 +600,12 @@
 					}
 				},
 				"connectVia": {
-					"referenceName": "selfHostedruntime",
+					"referenceName": "selfHostedIRnew",
 					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedruntime')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/HOurlyDataProcessTrigger')]",
-			"type": "Microsoft.DataFactory/factories/triggers",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"runtimeState": "Stopped",
-				"type": "TumblingWindowTrigger",
-				"typeProperties": {
-					"frequency": "Hour",
-					"interval": 1,
-					"startTime": "2022-07-30T09:00:00Z",
-					"endTime": "2022-07-31T09:00:00Z",
-					"delay": "00:00:00",
-					"maxConcurrency": 50,
-					"retryPolicy": {
-						"intervalInSeconds": 30
-					},
-					"dependsOn": [
-						{
-							"type": "TumblingWindowTriggerDependencyReference",
-							"referenceTrigger": {
-								"referenceName": "HourlyLogsTrigger",
-								"type": "TriggerReference"
-							}
-						}
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/triggers/HourlyLogsTrigger')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/delete')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Delete1",
-						"type": "Delete",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [
-							{
-								"name": "filesDeleted",
-								"value": "all csv files in hrcontainer output folder"
-							}
-						],
-						"typeProperties": {
-							"dataset": {
-								"referenceName": "OutputDelimitedText",
-								"type": "DatasetReference",
-								"parameters": {}
-							},
-							"logStorageSettings": {
-								"linkedServiceName": {
-									"referenceName": "AzureBlobStorage1",
-									"type": "LinkedServiceReference"
-								},
-								"path": "hrcontainer"
-							},
-							"enableLogging": true,
-							"storeSettings": {
-								"type": "AzureBlobStorageReadSettings",
-								"recursive": true,
-								"wildcardFileName": "*.csv",
-								"enablePartitionDiscovery": false
-							}
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-07-29T18:27:17Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/OutputDelimitedText')]",
-				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/event')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Copy data1",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "7.00:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobStorageReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobStorageWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"quoteAllText": true,
-									"fileExtension": ".txt"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "event",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "canada_output",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": [],
-				"lastPublishTime": "2022-07-29T18:18:43Z"
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/event')]",
-				"[concat(variables('factoryId'), '/datasets/canada_output')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedIRnew')]"
 			]
 		}
 	]

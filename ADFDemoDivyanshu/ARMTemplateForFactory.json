@@ -11,6 +11,14 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
 		},
+		"FinalTask_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'FinalTask'"
+		},
+		"FinalTask_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'FinalTask'"
+		},
 		"SqlServer1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
@@ -27,13 +35,17 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ssmsSQLserver'"
 		},
+		"FinalTask_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
+		},
 		"SqlServer1_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "DESKTOP-TISBAU6\\dell"
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
 		},
 		"ssmsSQLserver_properties_typeProperties_userName": {
 			"type": "string",
-			"defaultValue": "DESKTOP-TISBAU6\\dell"
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
 		},
 		"EventTrigger_properties_typeProperties_scope": {
 			"type": "string",
@@ -65,7 +77,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlServerSource",
-								"sqlReaderQuery": "select * from [StudentDetails.csv] order by GPA desc",
+								"sqlReaderQuery": "select * from StudentDetails order by GPA desc",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -150,7 +162,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlServerSource",
-								"sqlReaderQuery": "select * from [Restable.csv] order by subid",
+								"sqlReaderQuery": "select * from Restable order by subid",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -212,7 +224,7 @@
 						"typeProperties": {
 							"source": {
 								"type": "SqlServerSource",
-								"sqlReaderQuery": "select * from [Unallot.csv] order by StudentId",
+								"sqlReaderQuery": "select * from Unallot order by StudentId",
 								"queryTimeout": "02:00:00",
 								"partitionOption": "None"
 							},
@@ -305,7 +317,7 @@
 								}
 							},
 							"dataset": {
-								"referenceName": "DelimitedText2",
+								"referenceName": "RAWtables",
 								"type": "DatasetReference",
 								"parameters": {}
 							},
@@ -313,7 +325,7 @@
 						}
 					},
 					{
-						"name": "ForEach1",
+						"name": "ADLS to SQL Server",
 						"type": "ForEach",
 						"dependsOn": [
 							{
@@ -332,7 +344,7 @@
 							"isSequential": true,
 							"activities": [
 								{
-									"name": "Copy data1",
+									"name": "Coping Raw Tables",
 									"type": "Copy",
 									"dependsOn": [],
 									"policy": {
@@ -373,11 +385,11 @@
 									},
 									"inputs": [
 										{
-											"referenceName": "sqltable",
+											"referenceName": "RawTable",
 											"type": "DatasetReference",
 											"parameters": {
-												"filename": {
-													"value": "@item().Filename",
+												"SourceName": {
+													"value": "@item().Sourcename",
 													"type": "Expression"
 												}
 											}
@@ -385,11 +397,11 @@
 									],
 									"outputs": [
 										{
-											"referenceName": "SqlServerTable1",
+											"referenceName": "RawSQLTables",
 											"type": "DatasetReference",
 											"parameters": {
-												"filename": {
-													"value": "@item().Filename",
+												"SinkName": {
+													"value": "@item().Sinkname",
 													"type": "Expression"
 												}
 											}
@@ -408,9 +420,148 @@
 				"lastPublishTime": "2022-08-03T04:39:52Z"
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DelimitedText2')]",
-				"[concat(variables('factoryId'), '/datasets/sqltable')]",
-				"[concat(variables('factoryId'), '/datasets/SqlServerTable1')]"
+				"[concat(variables('factoryId'), '/datasets/RAWtables')]",
+				"[concat(variables('factoryId'), '/datasets/RawTable')]",
+				"[concat(variables('factoryId'), '/datasets/RawSQLTables')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FinalTask_ADLStoSQLServer')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "List of File Names",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"dataset": {
+								"referenceName": "RAWtables",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ADLS to SQL Server",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "List of File Names",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('List of File Names').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Coping Raw Tables",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "DelimitedTextSource",
+											"storeSettings": {
+												"type": "AzureBlobStorageReadSettings",
+												"recursive": true,
+												"enablePartitionDiscovery": false
+											},
+											"formatSettings": {
+												"type": "DelimitedTextReadSettings"
+											}
+										},
+										"sink": {
+											"type": "SqlServerSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate"
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "RawTable",
+											"type": "DatasetReference",
+											"parameters": {
+												"SourceName": {
+													"value": "@item().Sourcename",
+													"type": "Expression"
+												}
+											}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "RawSQLTables",
+											"type": "DatasetReference",
+											"parameters": {
+												"SinkName": {
+													"value": "@item().Sinkname",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": [],
+				"lastPublishTime": "2022-08-03T04:39:52Z"
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/RAWtables')]",
+				"[concat(variables('factoryId'), '/datasets/RawTable')]",
+				"[concat(variables('factoryId'), '/datasets/RawSQLTables')]"
 			]
 		},
 		{
@@ -619,6 +770,96 @@
 				"[concat(variables('factoryId'), '/linkedServices/ssmsSQLserver')]",
 				"[concat(variables('factoryId'), '/datasets/stgTOdbo1')]",
 				"[concat(variables('factoryId'), '/datasets/DBOTables')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/OLAP_ETL_FinalTask')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "LookUp for SP_NAMES",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "7.00:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "Select TOP 5 [NAME] from sysobjects where type = 'P' and category = 0",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SP_NAMES",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "Execution of SPs",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "LookUp for SP_NAMES",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('LookUp for SP_NAMES').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Fact and Dimension SP",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "7.00:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": {
+											"value": "@item().NAME",
+											"type": "Expression"
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "FinalTask",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SP_NAMES')]",
+				"[concat(variables('factoryId'), '/linkedServices/FinalTask')]"
 			]
 		},
 		{
@@ -1243,6 +1484,100 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/RAWtables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Tables.csv",
+						"container": "finaltask"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RawSQLTables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FinalTask",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SinkName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "stg",
+					"table": {
+						"value": "@dataset().SinkName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FinalTask')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RawTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourceName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": {
+							"value": "@dataset().SourceName",
+							"type": "Expression"
+						},
+						"folderPath": "Input",
+						"container": "finaltask"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/STGtoDBO')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1605,6 +1940,30 @@
 			"dependsOn": []
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/FinalTask')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('FinalTask_connectionString')]",
+					"userName": "[parameters('FinalTask_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('FinalTask_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "selfHostedIRnew",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedIRnew')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1620,12 +1979,12 @@
 					}
 				},
 				"connectVia": {
-					"referenceName": "selfHostedruntime",
+					"referenceName": "selfHostedIRnew",
 					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedruntime')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedIRnew')]"
 			]
 		},
 		{
@@ -1644,12 +2003,12 @@
 					}
 				},
 				"connectVia": {
-					"referenceName": "selfHostedruntime",
+					"referenceName": "selfHostedIRnew",
 					"type": "IntegrationRuntimeReference"
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedruntime')]"
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedIRnew')]"
 			]
 		},
 		{
@@ -1803,7 +2162,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/selfHostedruntime')]",
+			"name": "[concat(parameters('factoryName'), '/selfHostedIRnew')]",
 			"type": "Microsoft.DataFactory/factories/integrationRuntimes",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1811,6 +2170,24 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SP_NAMES')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FinalTask",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FinalTask')]"
+			]
 		}
 	]
 }
