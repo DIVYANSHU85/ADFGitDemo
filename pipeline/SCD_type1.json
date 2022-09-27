@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Lookup table",
+				"name": "Lookup for SP1",
 				"type": "Lookup",
 				"dependsOn": [],
 				"policy": {
@@ -29,11 +29,11 @@
 				}
 			},
 			{
-				"name": "ForEach1",
+				"name": "SP1 Execution",
 				"type": "ForEach",
 				"dependsOn": [
 					{
-						"activity": "Lookup table",
+						"activity": "Lookup for SP1",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -42,7 +42,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"items": {
-						"value": "@activity('Lookup table').output.value",
+						"value": "@activity('Lookup for SP1').output.value",
 						"type": "Expression"
 					},
 					"isSequential": true,
@@ -65,6 +65,113 @@
 									"LastRefreshDate": {
 										"value": {
 											"value": "@item().LastRefreshDate",
+											"type": "Expression"
+										},
+										"type": "DateTime"
+									},
+									"SinkSchemaName": {
+										"value": {
+											"value": "@item().SinkSchemaName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"SinkTableName": {
+										"value": {
+											"value": "@item().SinkTableName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"SourceSchemaName": {
+										"value": {
+											"value": "@item().SourceSchemaName",
+											"type": "Expression"
+										},
+										"type": "String"
+									},
+									"SourceTableName": {
+										"value": {
+											"value": "@item().SourceTableName",
+											"type": "Expression"
+										},
+										"type": "String"
+									}
+								}
+							},
+							"linkedServiceName": {
+								"referenceName": "SCDtype1",
+								"type": "LinkedServiceReference"
+							}
+						}
+					]
+				}
+			},
+			{
+				"name": "Lookup for SP2",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "SP1 Execution",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SqlServerSource",
+						"sqlReaderQuery": "SELECT * FROM LookupTable WHERE SinkSchemaName = 'dbo'",
+						"queryTimeout": "02:00:00",
+						"partitionOption": "None"
+					},
+					"dataset": {
+						"referenceName": "LookupTable",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
+			},
+			{
+				"name": "SP2 Execution",
+				"type": "ForEach",
+				"dependsOn": [
+					{
+						"activity": "Lookup for SP2",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"activities": [
+						{
+							"name": "Load Into Data Warehouse",
+							"type": "SqlServerStoredProcedure",
+							"dependsOn": [],
+							"policy": {
+								"timeout": "0.12:00:00",
+								"retry": 0,
+								"retryIntervalInSeconds": 30,
+								"secureOutput": false,
+								"secureInput": false
+							},
+							"userProperties": [],
+							"typeProperties": {
+								"storedProcedureName": "[dbo].[spLoadIntoDataWarehouse]",
+								"storedProcedureParameters": {
+									"PipelineTriggerTime": {
+										"value": {
+											"value": "@pipeline().TriggerTime",
 											"type": "Expression"
 										},
 										"type": "DateTime"
