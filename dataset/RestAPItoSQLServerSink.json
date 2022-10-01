@@ -1,0 +1,16 @@
+{
+	"name": "RestAPItoSQLServerSink",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SCDtype1",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "Employee"
+		}
+	}
+}
