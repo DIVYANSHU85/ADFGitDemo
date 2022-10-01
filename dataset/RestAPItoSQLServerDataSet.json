@@ -1,0 +1,12 @@
+{
+	"name": "RestAPItoSQLServerDataSet",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "RestAPItoSQLServer",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "RestResource",
+		"schema": []
+	}
+}
