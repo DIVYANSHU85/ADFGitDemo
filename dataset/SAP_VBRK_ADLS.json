@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "VBRK.csv",
 				"folderPath": "Source",
 				"fileSystem": "sapvbrk"
 			},
