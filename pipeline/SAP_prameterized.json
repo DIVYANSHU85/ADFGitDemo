@@ -40,9 +40,14 @@
 				],
 				"userProperties": [],
 				"typeProperties": {
+					"items": {
+						"value": "@activity('Lookup Table').output.value",
+						"type": "Expression"
+					},
+					"isSequential": true,
 					"activities": [
 						{
-							"name": "SAP Table to ADLS",
+							"name": "SAP Table to SQLServer",
 							"type": "Copy",
 							"dependsOn": [],
 							"policy": {
@@ -54,8 +59,54 @@
 							},
 							"userProperties": [],
 							"typeProperties": {
-								"enableStaging": false
-							}
+								"source": {
+									"type": "SapTableSource",
+									"partitionOption": "None"
+								},
+								"sink": {
+									"type": "SqlServerSink",
+									"writeBehavior": "insert",
+									"sqlWriterUseTableLock": false,
+									"tableOption": "autoCreate"
+								},
+								"enableStaging": false,
+								"translator": {
+									"type": "TabularTranslator",
+									"typeConversion": true,
+									"typeConversionSettings": {
+										"allowDataTruncation": true,
+										"treatBooleanAsNumber": false
+									}
+								}
+							},
+							"inputs": [
+								{
+									"referenceName": "SAPTables_SAPsource",
+									"type": "DatasetReference",
+									"parameters": {
+										"TableName": {
+											"value": "@item().SouceName",
+											"type": "Expression"
+										}
+									}
+								}
+							],
+							"outputs": [
+								{
+									"referenceName": "SQLServer_SAP_Tables",
+									"type": "DatasetReference",
+									"parameters": {
+										"SinkSchemaName": {
+											"value": "@item().SinkSchemaName",
+											"type": "Expression"
+										},
+										"SinkTableName": {
+											"value": "@item().SinkTableName",
+											"type": "Expression"
+										}
+									}
+								}
+							]
 						}
 					]
 				}
