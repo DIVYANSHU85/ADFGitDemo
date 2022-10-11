@@ -1,0 +1,16 @@
+{
+	"name": "SAP_SQLserver_lookup",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "VBRK_SQLTable",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "lookupTable"
+		}
+	}
+}

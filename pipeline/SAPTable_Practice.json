@@ -16,19 +16,21 @@
 				"userProperties": [],
 				"typeProperties": {
 					"source": {
-						"type": "SapTableSource",
-						"partitionOption": "None"
-					},
-					"sink": {
-						"type": "DelimitedTextSink",
+						"type": "DelimitedTextSource",
 						"storeSettings": {
-							"type": "AzureBlobFSWriteSettings"
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
-							"type": "DelimitedTextWriteSettings",
-							"quoteAllText": true,
-							"fileExtension": ".txt"
+							"type": "DelimitedTextReadSettings"
 						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
 					},
 					"enableStaging": false,
 					"translator": {
@@ -42,13 +44,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "SapTableResource1",
+						"referenceName": "SAP_VBRK_ADLS",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "SAP_VBRK_ADLS",
+						"referenceName": "VBRK_SQLServer_Table",
 						"type": "DatasetReference"
 					}
 				]

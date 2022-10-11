@@ -1,24 +1,19 @@
 {
-	"name": "SAP_VBRK_ADLS",
+	"name": "SAP_VBRK_ADLS_Json",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "ADLS_SAP_linked",
 			"type": "LinkedServiceReference"
 		},
 		"annotations": [],
-		"type": "DelimitedText",
+		"type": "Json",
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "VBRK.csv",
 				"folderPath": "Source",
 				"fileSystem": "sapvbrk"
-			},
-			"columnDelimiter": ",",
-			"escapeChar": "\\",
-			"firstRowAsHeader": true,
-			"quoteChar": "\""
+			}
 		},
-		"schema": []
+		"schema": {}
 	}
 }
