@@ -1,0 +1,23 @@
+{
+	"name": "SAP_VBRK_ADLS",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLS_SAP_linked",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "Source",
+				"fileSystem": "sapvbrk"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
