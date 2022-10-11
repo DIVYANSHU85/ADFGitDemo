@@ -1,0 +1,16 @@
+{
+	"name": "VBRK_SQLServer_Table",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "VBRK_SQLTable",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "VBRK"
+		}
+	}
+}
