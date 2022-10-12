@@ -1,0 +1,148 @@
+{
+	"name": "Task4_SAP_VBRKTable",
+	"properties": {
+		"activities": [
+			{
+				"name": "SAP to ADLS",
+				"type": "Copy",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "SapTableSource",
+						"rfcTableOptions": {
+							"value": "ERDAT EQ @{pipeline().parameters.specificDate}",
+							"type": "Expression"
+						},
+						"customRfcReadTableFunctionModule": "",
+						"rfcTableFields": "",
+						"partitionOption": "None"
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"quoteAllText": true,
+							"fileExtension": ".txt"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "SAPTables_SAPsource",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "VBRK_DateConstraint",
+						"type": "DatasetReference",
+						"parameters": {
+							"ADLSname": {
+								"value": "@concat('VBRK_',substring(pipeline().parameters.specificDate,1,8))",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			},
+			{
+				"name": "ADLS to SQLServer",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "SAP to ADLS",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "SqlServerSink",
+						"writeBehavior": "insert",
+						"sqlWriterUseTableLock": false,
+						"tableOption": "autoCreate"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "ADLS_VBRK_DateConstraint",
+						"type": "DatasetReference",
+						"parameters": {
+							"tablename": {
+								"value": "@concat('VBRK_',substring(pipeline().parameters.specificDate,1,8))",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SQL_VBRK_DateConstraint",
+						"type": "DatasetReference",
+						"parameters": {
+							"tableName": {
+								"value": "@concat('VBRK_',substring(pipeline().parameters.specificDate,1,8))",
+								"type": "Expression"
+							}
+						}
+					}
+				]
+			}
+		],
+		"parameters": {
+			"specificDate": {
+				"type": "string"
+			}
+		},
+		"annotations": []
+	}
+}

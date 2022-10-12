@@ -1,0 +1,45 @@
+{
+	"name": "SQLServer_Lookup_SAPtables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "VBRK_SQLTable",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [
+			{
+				"name": "SourceTableName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "TableType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LoadType",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SinkSchemaName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "SinkTableName",
+				"type": "nvarchar"
+			},
+			{
+				"name": "DeltaCondition",
+				"type": "nvarchar"
+			},
+			{
+				"name": "LastModifiedOn",
+				"type": "nvarchar"
+			}
+		],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": "lookupTab1"
+		}
+	}
+}

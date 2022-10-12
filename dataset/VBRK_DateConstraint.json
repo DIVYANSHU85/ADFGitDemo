@@ -1,0 +1,32 @@
+{
+	"name": "VBRK_DateConstraint",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "ADLS_SAP_linked",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"ADLSname": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": {
+					"value": "@dataset().ADLSname",
+					"type": "Expression"
+				},
+				"folderPath": "Task4",
+				"fileSystem": "sapvbrk"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": []
+	}
+}
