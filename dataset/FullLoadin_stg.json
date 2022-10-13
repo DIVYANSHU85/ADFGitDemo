@@ -1,0 +1,24 @@
+{
+	"name": "FullLoadin_stg",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "VBRK_SQLTable",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SourceTableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "stg",
+			"table": {
+				"value": "@dataset().SourceTableName",
+				"type": "Expression"
+			}
+		}
+	}
+}

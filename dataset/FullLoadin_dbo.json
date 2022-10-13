@@ -1,0 +1,24 @@
+{
+	"name": "FullLoadin_dbo",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "VBRK_SQLTable",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SinkTableName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SqlServerTable",
+		"schema": [],
+		"typeProperties": {
+			"schema": "dbo",
+			"table": {
+				"value": "@dataset().SinkTableName",
+				"type": "Expression"
+			}
+		}
+	}
+}

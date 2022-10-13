@@ -1,0 +1,23 @@
+{
+	"name": "SAP_Source_tables",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "SAPtable_VBRK",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"SourceName": {
+				"type": "string"
+			}
+		},
+		"annotations": [],
+		"type": "SapTableResource",
+		"schema": [],
+		"typeProperties": {
+			"tableName": {
+				"value": "@dataset().SourceName",
+				"type": "Expression"
+			}
+		}
+	}
+}
