@@ -9,7 +9,7 @@
 		"type": "SapTableResource",
 		"schema": [],
 		"typeProperties": {
-			"tableName": "VBRK"
+			"tableName": "T005"
 		}
 	}
 }

@@ -296,17 +296,11 @@
 											"storedProcedureName": "[dbo].[spFullLoadTypeMD]",
 											"storedProcedureParameters": {
 												"ModifiedDate": {
-													"value": {
-														"value": "@pipeline().TriggerTime",
-														"type": "Expression"
-													},
+													"value": "",
 													"type": "String"
 												},
 												"SourceTableName": {
-													"value": {
-														"value": "@item().SourceTableName",
-														"type": "Expression"
-													},
+													"value": "",
 													"type": "String"
 												}
 											}
