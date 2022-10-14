@@ -82,13 +82,7 @@
 							"inputs": [
 								{
 									"referenceName": "SAPTables_SAPsource",
-									"type": "DatasetReference",
-									"parameters": {
-										"TableName": {
-											"value": "@item().SouceName",
-											"type": "Expression"
-										}
-									}
+									"type": "DatasetReference"
 								}
 							],
 							"outputs": [
