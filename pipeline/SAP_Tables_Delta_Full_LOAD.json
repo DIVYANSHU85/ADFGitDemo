@@ -82,7 +82,7 @@
 											"sink": {
 												"type": "SqlServerSink",
 												"preCopyScript": {
-													"value": "@{concat('IF OBJECT_ID(',item().SinkSchemaName,'.',item().SinkTableName,') IS NOT NULL\nTRUNCATE TABLE ',item().SinkSchemaName,'.',item().SinkTableName)}",
+													"value": "@{concat('IF OBJECT_ID(','''',item().SinkSchemaName,'.',item().SinkTableName,'''',') IS NOT NULL\nTRUNCATE TABLE ',item().SinkSchemaName,'.',item().SinkTableName)}",
 													"type": "Expression"
 												},
 												"writeBehavior": "insert",
@@ -221,7 +221,7 @@
 											"sink": {
 												"type": "SqlServerSink",
 												"preCopyScript": {
-													"value": "@{concat('IF OBJECT_ID(',item().SinkSchemaName,'.',item().SinkTableName,') IS NOT NULL\nTRUNCATE TABLE ',item().SinkSchemaName,'.',item().SinkTableName)}",
+													"value": "@{concat('IF OBJECT_ID(','''',item().SinkSchemaName,'.',item().SinkTableName,'''',') IS NOT NULL\nTRUNCATE TABLE ',item().SinkSchemaName,'.',item().SinkTableName)}",
 													"type": "Expression"
 												},
 												"writeBehavior": "insert",
