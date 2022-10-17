@@ -367,6 +367,12 @@
 				}
 			}
 		],
+		"variables": {
+			"maxDate": {
+				"type": "String",
+				"defaultValue": "20220901"
+			}
+		},
 		"annotations": []
 	}
 }
