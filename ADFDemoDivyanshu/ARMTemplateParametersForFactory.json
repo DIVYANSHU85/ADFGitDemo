@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "ADFDemoDivyanshu"
 		},
+		"ADLS_SAP_linked_accountKey": {
+			"value": ""
+		},
 		"AzureBlobStorage1_connectionString": {
 			"value": ""
 		},
@@ -14,10 +17,25 @@
 		"FinalTask_password": {
 			"value": ""
 		},
+		"SAPtable_VBRK_password": {
+			"value": ""
+		},
+		"SCDtype1_connectionString": {
+			"value": ""
+		},
+		"SCDtype1_password": {
+			"value": ""
+		},
 		"SqlServer1_connectionString": {
 			"value": ""
 		},
 		"SqlServer1_password": {
+			"value": ""
+		},
+		"VBRK_SQLTable_connectionString": {
+			"value": ""
+		},
+		"VBRK_SQLTable_password": {
 			"value": ""
 		},
 		"ssmsSQLserver_connectionString": {
@@ -26,10 +44,34 @@
 		"ssmsSQLserver_password": {
 			"value": ""
 		},
+		"ADLS_SAP_linked_properties_typeProperties_url": {
+			"value": "https://divaynshuadlsgen.dfs.core.windows.net/"
+		},
 		"FinalTask_properties_typeProperties_userName": {
 			"value": "DESKTOP-LIH9UQE\\divkr"
 		},
+		"RestAPItoSQLServer_properties_typeProperties_url": {
+			"value": "http://dummy.restapiexample.com/api/v1/employees"
+		},
+		"SAPtable_VBRK_properties_typeProperties_clientId": {
+			"value": "100"
+		},
+		"SAPtable_VBRK_properties_typeProperties_userName": {
+			"value": "kjoshi"
+		},
+		"SAPtable_VBRK_properties_typeProperties_server": {
+			"value": "fas.cognitusconsulting.com"
+		},
+		"SAPtable_VBRK_properties_typeProperties_systemNumber": {
+			"value": "01"
+		},
+		"SCDtype1_properties_typeProperties_userName": {
+			"value": "DESKTOP-LIH9UQE\\divkr"
+		},
 		"SqlServer1_properties_typeProperties_userName": {
+			"value": "DESKTOP-LIH9UQE\\divkr"
+		},
+		"VBRK_SQLTable_properties_typeProperties_userName": {
 			"value": "DESKTOP-LIH9UQE\\divkr"
 		},
 		"ssmsSQLserver_properties_typeProperties_userName": {

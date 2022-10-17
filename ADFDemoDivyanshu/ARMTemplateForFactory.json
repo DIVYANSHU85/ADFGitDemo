@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "ADFDemoDivyanshu"
 		},
+		"ADLS_SAP_linked_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'ADLS_SAP_linked'"
+		},
 		"AzureBlobStorage1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'AzureBlobStorage1'"
@@ -19,6 +23,18 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'FinalTask'"
 		},
+		"SAPtable_VBRK_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SAPtable_VBRK'"
+		},
+		"SCDtype1_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'SCDtype1'"
+		},
+		"SCDtype1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'SCDtype1'"
+		},
 		"SqlServer1_connectionString": {
 			"type": "secureString",
 			"metadata": "Secure string for 'connectionString' of 'SqlServer1'"
@@ -26,6 +42,14 @@
 		"SqlServer1_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'SqlServer1'"
+		},
+		"VBRK_SQLTable_connectionString": {
+			"type": "secureString",
+			"metadata": "Secure string for 'connectionString' of 'VBRK_SQLTable'"
+		},
+		"VBRK_SQLTable_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'VBRK_SQLTable'"
 		},
 		"ssmsSQLserver_connectionString": {
 			"type": "secureString",
@@ -35,11 +59,43 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'ssmsSQLserver'"
 		},
+		"ADLS_SAP_linked_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://divaynshuadlsgen.dfs.core.windows.net/"
+		},
 		"FinalTask_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
 		},
+		"RestAPItoSQLServer_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "http://dummy.restapiexample.com/api/v1/employees"
+		},
+		"SAPtable_VBRK_properties_typeProperties_clientId": {
+			"type": "string",
+			"defaultValue": "100"
+		},
+		"SAPtable_VBRK_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "kjoshi"
+		},
+		"SAPtable_VBRK_properties_typeProperties_server": {
+			"type": "string",
+			"defaultValue": "fas.cognitusconsulting.com"
+		},
+		"SAPtable_VBRK_properties_typeProperties_systemNumber": {
+			"type": "string",
+			"defaultValue": "01"
+		},
+		"SCDtype1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
+		},
 		"SqlServer1_properties_typeProperties_userName": {
+			"type": "string",
+			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
+		},
+		"VBRK_SQLTable_properties_typeProperties_userName": {
 			"type": "string",
 			"defaultValue": "DESKTOP-LIH9UQE\\divkr"
 		},
@@ -1023,6 +1079,1259 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/RestAPItoSQLserver')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "RestSource",
+								"httpRequestTimeout": "00:01:40",
+								"requestInterval": "00.00:00:00.010",
+								"requestMethod": "GET",
+								"paginationRules": {
+									"supportRFC5988": "true"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"path": "[['id']"
+										},
+										"sink": {
+											"name": "id",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"path": "[['employee_name']"
+										},
+										"sink": {
+											"name": "employee_name",
+											"type": "String"
+										}
+									},
+									{
+										"source": {
+											"path": "[['employee_salary']"
+										},
+										"sink": {
+											"name": "employee_salary",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"path": "[['employee_age']"
+										},
+										"sink": {
+											"name": "employee_age",
+											"type": "Int64"
+										}
+									},
+									{
+										"source": {
+											"path": "[['profile_image']"
+										},
+										"sink": {
+											"name": "profile_image",
+											"type": "String"
+										}
+									}
+								],
+								"collectionReference": "$['data']",
+								"mapComplexValuesToString": true
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "RestAPItoSQLServerDataSet",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "RestAPItoSQLServerSink",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/RestAPItoSQLServerDataSet')]",
+				"[concat(variables('factoryId'), '/datasets/RestAPItoSQLServerSink')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAPTable_Practice')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SAP_VBRK_ADLS",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "VBRK_SQLServer_Table",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SAP_VBRK_ADLS')]",
+				"[concat(variables('factoryId'), '/datasets/VBRK_SQLServer_Table')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP_Tables_Delta_Full_LOAD')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup for SAP tables",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SQLServer_Lookup_SAPtables",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup for SAP tables",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup for SAP tables').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "If condition for LoadType",
+									"type": "IfCondition",
+									"dependsOn": [],
+									"userProperties": [],
+									"typeProperties": {
+										"expression": {
+											"value": "@equals(item().LoadType,'full')",
+											"type": "Expression"
+										},
+										"ifFalseActivities": [
+											{
+												"name": "Copy from SAP table to stg DL",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "SapTableSource",
+														"rfcTableOptions": {
+															"value": "@{item().DeltaCondition}",
+															"type": "Expression"
+														},
+														"customRfcReadTableFunctionModule": "",
+														"partitionOption": "None"
+													},
+													"sink": {
+														"type": "SqlServerSink",
+														"preCopyScript": {
+															"value": "@{concat('IF OBJECT_ID(','''',item().SinkSchemaName,'.',item().SinkTableName,'''',') IS NOT NULL\nTRUNCATE TABLE ',item().SinkSchemaName,'.',item().SinkTableName)}",
+															"type": "Expression"
+														},
+														"writeBehavior": "insert",
+														"sqlWriterUseTableLock": false,
+														"tableOption": "autoCreate"
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "SAP_Source_tables",
+														"type": "DatasetReference",
+														"parameters": {
+															"SourceName": {
+																"value": "@item().SourceTableName",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "SQLServer_SAP_Tables",
+														"type": "DatasetReference",
+														"parameters": {
+															"SinkSchemaName": {
+																"value": "@item().SinkSchemaName",
+																"type": "Expression"
+															},
+															"SinkTableName": {
+																"value": "@item().SinkTableName",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											},
+											{
+												"name": "SCD type 2 SP stg to dbo",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "Copy from SAP table to stg DL",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dbo].[usp_LoadTypeDeltaSTGtoDBO]",
+													"storedProcedureParameters": {
+														"SourceTableName": {
+															"value": {
+																"value": "@item().SourceTableName",
+																"type": "Expression"
+															},
+															"type": "String"
+														}
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "VBRK_SQLTable",
+													"type": "LinkedServiceReference"
+												}
+											},
+											{
+												"name": "SP to update MD and DeltaCondition",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "SCD type 2 SP stg to dbo",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dbo].[usp_UpdateDeltaCondition]",
+													"storedProcedureParameters": {
+														"ModifiedDate": {
+															"value": {
+																"value": "@pipeline().TriggerTime",
+																"type": "Expression"
+															},
+															"type": "DateTime"
+														},
+														"SourceTableName": {
+															"value": {
+																"value": "@item().SourceTableName",
+																"type": "Expression"
+															},
+															"type": "String"
+														}
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "VBRK_SQLTable",
+													"type": "LinkedServiceReference"
+												}
+											}
+										],
+										"ifTrueActivities": [
+											{
+												"name": "Copy from SAP source to stg",
+												"type": "Copy",
+												"dependsOn": [],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "SapTableSource",
+														"partitionOption": "None"
+													},
+													"sink": {
+														"type": "SqlServerSink",
+														"preCopyScript": {
+															"value": "@{concat('IF OBJECT_ID(','''',item().SinkSchemaName,'.',item().SinkTableName,'''',') IS NOT NULL\nTRUNCATE TABLE ',item().SinkSchemaName,'.',item().SinkTableName)}",
+															"type": "Expression"
+														},
+														"writeBehavior": "insert",
+														"sqlWriterUseTableLock": false,
+														"tableOption": "autoCreate"
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "SAP_Source_tables",
+														"type": "DatasetReference",
+														"parameters": {
+															"SourceName": {
+																"value": "@item().SourceTableName",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "SQLServer_SAP_Tables",
+														"type": "DatasetReference",
+														"parameters": {
+															"SinkSchemaName": {
+																"value": "@item().SinkSchemaName",
+																"type": "Expression"
+															},
+															"SinkTableName": {
+																"value": "@item().SinkTableName",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											},
+											{
+												"name": "Copy from stg to dbo",
+												"type": "Copy",
+												"dependsOn": [
+													{
+														"activity": "Copy from SAP source to stg",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"source": {
+														"type": "SqlServerSource",
+														"queryTimeout": "02:00:00",
+														"partitionOption": "None"
+													},
+													"sink": {
+														"type": "SqlServerSink",
+														"writeBehavior": "insert",
+														"sqlWriterUseTableLock": false,
+														"tableOption": "autoCreate"
+													},
+													"enableStaging": false
+												},
+												"inputs": [
+													{
+														"referenceName": "FullLoadin_stg",
+														"type": "DatasetReference",
+														"parameters": {
+															"SourceTableName": {
+																"value": "@item().SinkTableName",
+																"type": "Expression"
+															}
+														}
+													}
+												],
+												"outputs": [
+													{
+														"referenceName": "FullLoadin_dbo",
+														"type": "DatasetReference",
+														"parameters": {
+															"SinkTableName": {
+																"value": "@item().SinkTableName",
+																"type": "Expression"
+															}
+														}
+													}
+												]
+											},
+											{
+												"name": "SP for update MD in full load",
+												"type": "SqlServerStoredProcedure",
+												"dependsOn": [
+													{
+														"activity": "Copy from stg to dbo",
+														"dependencyConditions": [
+															"Succeeded"
+														]
+													}
+												],
+												"policy": {
+													"timeout": "0.12:00:00",
+													"retry": 0,
+													"retryIntervalInSeconds": 30,
+													"secureOutput": false,
+													"secureInput": false
+												},
+												"userProperties": [],
+												"typeProperties": {
+													"storedProcedureName": "[[dbo].[usp_UpdateDeltaCondition]",
+													"storedProcedureParameters": {
+														"ModifiedDate": {
+															"value": {
+																"value": "@pipeline().TriggerTime",
+																"type": "Expression"
+															},
+															"type": "DateTime"
+														},
+														"SourceTableName": {
+															"value": {
+																"value": "@item().SourceTableName",
+																"type": "Expression"
+															},
+															"type": "String"
+														}
+													}
+												},
+												"linkedServiceName": {
+													"referenceName": "VBRK_SQLTable",
+													"type": "LinkedServiceReference"
+												}
+											}
+										]
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"maxDate": {
+						"type": "String",
+						"defaultValue": "20220901"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SQLServer_Lookup_SAPtables')]",
+				"[concat(variables('factoryId'), '/datasets/SAP_Source_tables')]",
+				"[concat(variables('factoryId'), '/datasets/SQLServer_SAP_Tables')]",
+				"[concat(variables('factoryId'), '/linkedServices/VBRK_SQLTable')]",
+				"[concat(variables('factoryId'), '/datasets/FullLoadin_stg')]",
+				"[concat(variables('factoryId'), '/datasets/FullLoadin_dbo')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP_prameterized')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup Table",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "SAP_SQLserver_lookup",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "ForEach1",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup Table",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup Table').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "SAP Table to SQLServer",
+									"type": "Copy",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"source": {
+											"type": "SapTableSource",
+											"partitionOption": "None"
+										},
+										"sink": {
+											"type": "SqlServerSink",
+											"writeBehavior": "insert",
+											"sqlWriterUseTableLock": false,
+											"tableOption": "autoCreate"
+										},
+										"enableStaging": false,
+										"translator": {
+											"type": "TabularTranslator",
+											"typeConversion": true,
+											"typeConversionSettings": {
+												"allowDataTruncation": true,
+												"treatBooleanAsNumber": false
+											}
+										}
+									},
+									"inputs": [
+										{
+											"referenceName": "SAPTables_SAPsource",
+											"type": "DatasetReference",
+											"parameters": {}
+										}
+									],
+									"outputs": [
+										{
+											"referenceName": "SQLServer_SAP_Tables",
+											"type": "DatasetReference",
+											"parameters": {
+												"SinkSchemaName": {
+													"value": "@item().SinkSchemaName",
+													"type": "Expression"
+												},
+												"SinkTableName": {
+													"value": "@item().SinkTableName",
+													"type": "Expression"
+												}
+											}
+										}
+									]
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SAP_SQLserver_lookup')]",
+				"[concat(variables('factoryId'), '/datasets/SAPTables_SAPsource')]",
+				"[concat(variables('factoryId'), '/datasets/SQLServer_SAP_Tables')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCD_type1')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Lookup for SP1",
+						"type": "Lookup",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT * FROM LookupTable WHERE SinkSchemaName = 'stg'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "LookupTable",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "SP1 Execution",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup for SP1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup for SP1').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Stored procedure1",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[spToLoadIncrementalData]",
+										"storedProcedureParameters": {
+											"LastRefreshDate": {
+												"value": {
+													"value": "@item().LastRefreshDate",
+													"type": "Expression"
+												},
+												"type": "DateTime"
+											},
+											"SinkSchemaName": {
+												"value": {
+													"value": "@item().SinkSchemaName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"SinkTableName": {
+												"value": {
+													"value": "@item().SinkTableName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"SourceSchemaName": {
+												"value": {
+													"value": "@item().SourceSchemaName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"SourceTableName": {
+												"value": {
+													"value": "@item().SourceTableName",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "SCDtype1",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					},
+					{
+						"name": "Lookup for SP2",
+						"type": "Lookup",
+						"dependsOn": [
+							{
+								"activity": "SP1 Execution",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SqlServerSource",
+								"sqlReaderQuery": "SELECT * FROM LookupTable WHERE SinkSchemaName = 'dbo'",
+								"queryTimeout": "02:00:00",
+								"partitionOption": "None"
+							},
+							"dataset": {
+								"referenceName": "LookupTable",
+								"type": "DatasetReference",
+								"parameters": {}
+							},
+							"firstRowOnly": false
+						}
+					},
+					{
+						"name": "SP2 Execution",
+						"type": "ForEach",
+						"dependsOn": [
+							{
+								"activity": "Lookup for SP2",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"items": {
+								"value": "@activity('Lookup for SP2').output.value",
+								"type": "Expression"
+							},
+							"isSequential": true,
+							"activities": [
+								{
+									"name": "Load Into Data Warehouse",
+									"type": "SqlServerStoredProcedure",
+									"dependsOn": [],
+									"policy": {
+										"timeout": "0.12:00:00",
+										"retry": 0,
+										"retryIntervalInSeconds": 30,
+										"secureOutput": false,
+										"secureInput": false
+									},
+									"userProperties": [],
+									"typeProperties": {
+										"storedProcedureName": "[[dbo].[spLoadIntoDataWarehouse]",
+										"storedProcedureParameters": {
+											"PipelineTriggerTime": {
+												"value": {
+													"value": "@pipeline().TriggerTime",
+													"type": "Expression"
+												},
+												"type": "DateTime"
+											},
+											"SinkSchemaName": {
+												"value": {
+													"value": "@item().SinkSchemaName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"SinkTableName": {
+												"value": {
+													"value": "@item().SinkTableName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"SourceSchemaName": {
+												"value": {
+													"value": "@item().SourceSchemaName",
+													"type": "Expression"
+												},
+												"type": "String"
+											},
+											"SourceTableName": {
+												"value": {
+													"value": "@item().SourceTableName",
+													"type": "Expression"
+												},
+												"type": "String"
+											}
+										}
+									},
+									"linkedServiceName": {
+										"referenceName": "SCDtype1",
+										"type": "LinkedServiceReference"
+									}
+								}
+							]
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/LookupTable')]",
+				"[concat(variables('factoryId'), '/linkedServices/SCDtype1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Task4_SAP_VBRKTable')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "SAP to ADLS",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "SapTableSource",
+								"rfcTableOptions": {
+									"value": "ERDAT EQ @{pipeline().parameters.specificDate}",
+									"type": "Expression"
+								},
+								"customRfcReadTableFunctionModule": "",
+								"rfcTableFields": "",
+								"partitionOption": "None"
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "SAPTables_SAPsource",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "VBRK_DateConstraint",
+								"type": "DatasetReference",
+								"parameters": {
+									"ADLSname": {
+										"value": "@concat('VBRK_',substring(pipeline().parameters.specificDate,1,8))",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					},
+					{
+						"name": "ADLS to SQLServer",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "SAP to ADLS",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "SqlServerSink",
+								"writeBehavior": "insert",
+								"sqlWriterUseTableLock": false,
+								"tableOption": "autoCreate"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "ADLS_VBRK_DateConstraint",
+								"type": "DatasetReference",
+								"parameters": {
+									"tablename": {
+										"value": "@concat('VBRK_',substring(pipeline().parameters.specificDate,1,8))",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SQL_VBRK_DateConstraint",
+								"type": "DatasetReference",
+								"parameters": {
+									"tableName": {
+										"value": "@concat('VBRK_',substring(pipeline().parameters.specificDate,1,8))",
+										"type": "Expression"
+									}
+								}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"specificDate": {
+						"type": "string"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SAPTables_SAPsource')]",
+				"[concat(variables('factoryId'), '/datasets/VBRK_DateConstraint')]",
+				"[concat(variables('factoryId'), '/datasets/ADLS_VBRK_DateConstraint')]",
+				"[concat(variables('factoryId'), '/datasets/SQL_VBRK_DateConstraint')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/WebActivity')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Web1",
+						"type": "WebActivity",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"url": "http://dummy.restapiexample.com/api/v1/employees",
+							"method": "GET",
+							"headers": {}
+						}
+					},
+					{
+						"name": "Set variable1",
+						"type": "SetVariable",
+						"dependsOn": [
+							{
+								"activity": "Web1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"userProperties": [],
+						"typeProperties": {
+							"variableName": "new",
+							"value": {
+								"value": "@{activity('Web1').output.data}",
+								"type": "Expression"
+							}
+						}
+					},
+					{
+						"name": "Copy data1",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Set variable1",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"additionalColumns": [
+									{
+										"name": "mycolumn",
+										"value": {
+											"value": "@variables('new')",
+											"type": "Expression"
+										}
+									}
+								],
+								"storeSettings": {
+									"type": "AzureBlobStorageReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobStorageWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"quoteAllText": true,
+									"fileExtension": ".txt"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "mycolumn",
+											"type": "String"
+										},
+										"sink": {
+											"type": "String",
+											"physicalType": "String",
+											"ordinal": 1
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "input",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "Weboutput",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"variables": {
+					"new": {
+						"type": "String"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/input')]",
+				"[concat(variables('factoryId'), '/datasets/Weboutput')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/delete')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1310,6 +2619,72 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_VBRK_DateConstraint')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_SAP_linked",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tablename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().tablename",
+							"type": "Expression"
+						},
+						"folderPath": "Task4",
+						"fileSystem": "sapvbrk"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_SAP_linked')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/ADLScsv')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Employee.csv",
+						"folderPath": "output1",
+						"container": "web"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DBOTables')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1394,6 +2769,129 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FullLoadin_dbo')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "VBRK_SQLTable",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SinkTableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().SinkTableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/VBRK_SQLTable')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/FullLoadin_stg')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "VBRK_SQLTable",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourceTableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "stg",
+					"table": {
+						"value": "@dataset().SourceTableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/VBRK_SQLTable')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Json1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Employee.json",
+						"folderPath": "output",
+						"container": "web"
+					}
+				},
+				"schema": {
+					"type": "object",
+					"properties": {
+						"id": {
+							"type": "integer"
+						},
+						"employee_name": {
+							"type": "string"
+						},
+						"employee_salary": {
+							"type": "integer"
+						},
+						"employee_age": {
+							"type": "integer"
+						},
+						"profile_image": {
+							"type": "string"
+						}
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/LookupTable')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SCDtype1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "LookupTable"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SCDtype1')]"
 			]
 		},
 		{
@@ -1578,6 +3076,334 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/RestAPItoSQLServerDataSet')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "RestAPItoSQLServer",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "RestResource",
+				"typeProperties": {},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/RestAPItoSQLServer')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/RestAPItoSQLServerSink')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SCDtype1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "Employee"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SCDtype1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAPTables_SAPsource')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SAPtable_VBRK",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SapTableResource",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "T005"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SAPtable_VBRK')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP_SQLserver_lookup')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "VBRK_SQLTable",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "lookupTable"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/VBRK_SQLTable')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP_Source_tables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SAPtable_VBRK",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SourceName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SapTableResource",
+				"schema": [],
+				"typeProperties": {
+					"tableName": {
+						"value": "@dataset().SourceName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SAPtable_VBRK')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP_VBRK_ADLS')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_SAP_linked",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "VBRK.csv",
+						"folderPath": "Source",
+						"fileSystem": "sapvbrk"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_SAP_linked')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAP_VBRK_ADLS_Json')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_SAP_linked",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "Json",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "Source",
+						"fileSystem": "sapvbrk"
+					}
+				},
+				"schema": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_SAP_linked')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCDtype1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SCDtype1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schemaname": {
+						"type": "string"
+					},
+					"tablename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schemaname",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().tablename",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SCDtype1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SP_NAMES')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "FinalTask",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/FinalTask')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQLServer_Lookup_SAPtables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "VBRK_SQLTable",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [
+					{
+						"name": "SourceTableName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "TableType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LoadType",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SinkSchemaName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "SinkTableName",
+						"type": "nvarchar"
+					},
+					{
+						"name": "DeltaCondition",
+						"type": "nvarchar"
+					},
+					{
+						"name": "LastModifiedOn",
+						"type": "nvarchar"
+					}
+				],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "lookupTab1"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/VBRK_SQLTable')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQLServer_SAP_Tables')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "VBRK_SQLTable",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"SinkSchemaName": {
+						"type": "string"
+					},
+					"SinkTableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().SinkSchemaName",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().SinkTableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/VBRK_SQLTable')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SQL_VBRK_DateConstraint')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "VBRK_SQLTable",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"tableName": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": {
+						"value": "@dataset().tableName",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/VBRK_SQLTable')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/STGtoDBO')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1593,6 +3419,26 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/ssmsSQLserver')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SapTableResource1')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SAPtable_VBRK",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SapTableResource",
+				"schema": [],
+				"typeProperties": {
+					"tableName": "VBRK"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SAPtable_VBRK')]"
 			]
 		},
 		{
@@ -1715,6 +3561,41 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/SqlServerTable3')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "SCDtype1",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"schemaname": {
+						"type": "string"
+					},
+					"tablename": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": {
+						"value": "@dataset().schemaname",
+						"type": "Expression"
+					},
+					"table": {
+						"value": "@dataset().tablename",
+						"type": "Expression"
+					}
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/SCDtype1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/StudentAllotmentOutput')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1794,6 +3675,93 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/VBRK_DateConstraint')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "ADLS_SAP_linked",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"ADLSname": {
+						"type": "string"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": {
+							"value": "@dataset().ADLSname",
+							"type": "Expression"
+						},
+						"folderPath": "Task4",
+						"fileSystem": "sapvbrk"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/ADLS_SAP_linked')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VBRK_SQLServer_Table')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "VBRK_SQLTable",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "SqlServerTable",
+				"schema": [],
+				"typeProperties": {
+					"schema": "dbo",
+					"table": "VBRK"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/VBRK_SQLTable')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Weboutput')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "Employee.json",
+						"folderPath": "output",
+						"container": "web"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "",
+					"firstRowAsHeader": false,
+					"quoteChar": ""
+				},
+				"schema": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/canada_output')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -1852,6 +3820,39 @@
 					},
 					{
 						"name": "per_capita_income",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/AzureBlobStorage1')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/input')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "AzureBlobStorage1",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobStorageLocation",
+						"fileName": "xyz.txt",
+						"folderPath": "input",
+						"container": "web"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": false,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
 						"type": "String"
 					}
 				]
@@ -1927,6 +3928,23 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/ADLS_SAP_linked')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('ADLS_SAP_linked_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('ADLS_SAP_linked_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/AzureBlobStorage1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1964,6 +3982,73 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/RestAPItoSQLServer')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "RestService",
+				"typeProperties": {
+					"url": "[parameters('RestAPItoSQLServer_properties_typeProperties_url')]",
+					"enableServerCertificateValidation": true,
+					"authenticationType": "Anonymous"
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SAPtable_VBRK')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SapTable",
+				"typeProperties": {
+					"clientId": "[parameters('SAPtable_VBRK_properties_typeProperties_clientId')]",
+					"language": "",
+					"sncMode": false,
+					"userName": "[parameters('SAPtable_VBRK_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SAPtable_VBRK_password')]"
+					},
+					"server": "[parameters('SAPtable_VBRK_properties_typeProperties_server')]",
+					"systemNumber": "[parameters('SAPtable_VBRK_properties_typeProperties_systemNumber')]"
+				},
+				"connectVia": {
+					"referenceName": "selfHostedIRnew",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedIRnew')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/SCDtype1')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('SCDtype1_connectionString')]",
+					"userName": "[parameters('SCDtype1_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('SCDtype1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "selfHostedIRnew",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedIRnew')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/SqlServer1')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
 			"apiVersion": "2018-06-01",
@@ -1976,6 +4061,30 @@
 					"password": {
 						"type": "SecureString",
 						"value": "[parameters('SqlServer1_password')]"
+					}
+				},
+				"connectVia": {
+					"referenceName": "selfHostedIRnew",
+					"type": "IntegrationRuntimeReference"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/integrationRuntimes/selfHostedIRnew')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/VBRK_SQLTable')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "SqlServer",
+				"typeProperties": {
+					"connectionString": "[parameters('VBRK_SQLTable_connectionString')]",
+					"userName": "[parameters('VBRK_SQLTable_properties_typeProperties_userName')]",
+					"password": {
+						"type": "SecureString",
+						"value": "[parameters('VBRK_SQLTable_password')]"
 					}
 				},
 				"connectVia": {
@@ -2170,24 +4279,6 @@
 				"typeProperties": {}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/SP_NAMES')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "FinalTask",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "SqlServerTable",
-				"schema": [],
-				"typeProperties": {}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/FinalTask')]"
-			]
 		}
 	]
 }
