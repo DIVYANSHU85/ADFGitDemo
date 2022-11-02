@@ -1,0 +1,20 @@
+{
+	"name": "Excel1",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "DemoSystem",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "Excel",
+		"typeProperties": {
+			"sheetName": "customer",
+			"location": {
+				"type": "FileServerLocation",
+				"fileName": "customer.xls"
+			},
+			"firstRowAsHeader": true
+		},
+		"schema": []
+	}
+}
