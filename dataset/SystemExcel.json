@@ -1,5 +1,5 @@
 {
-	"name": "Excel1",
+	"name": "SystemExcel",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "DemoSystem",

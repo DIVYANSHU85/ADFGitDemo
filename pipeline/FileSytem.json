@@ -46,7 +46,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "Excel1",
+						"referenceName": "SystemExcel",
 						"type": "DatasetReference"
 					}
 				],
