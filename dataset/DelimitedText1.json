@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"fileName": "HR_comma_sep.csv",
+				"fileName": "HR_comma_sep",
 				"folderPath": "input",
 				"container": "hrcontainer"
 			},

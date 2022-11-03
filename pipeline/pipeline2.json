@@ -3,11 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Web1",
-				"type": "WebActivity",
+				"name": "Stored procedure1",
+				"type": "SqlServerStoredProcedure",
 				"dependsOn": [],
 				"policy": {
-					"timeout": "7.00:00:00",
+					"timeout": "0.12:00:00",
 					"retry": 0,
 					"retryIntervalInSeconds": 30,
 					"secureOutput": false,
@@ -15,11 +15,39 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"url": "https://www.99acres.com/search/property/buy/jaipur?city=177&keyword=jaipur&preference=S&area_unit=1&res_com=R",
-					"method": "GET"
+					"storedProcedureName": "[dbo].[usp_xyz]"
+				},
+				"linkedServiceName": {
+					"referenceName": "SCDtype1",
+					"type": "LinkedServiceReference"
+				}
+			},
+			{
+				"name": "Set variable1",
+				"type": "SetVariable",
+				"dependsOn": [
+					{
+						"activity": "Stored procedure1",
+						"dependencyConditions": [
+							"Completed"
+						]
+					}
+				],
+				"userProperties": [],
+				"typeProperties": {
+					"variableName": "error",
+					"value": {
+						"value": "@activity('Stored procedure1').error.message",
+						"type": "Expression"
+					}
 				}
 			}
 		],
+		"variables": {
+			"error": {
+				"type": "String"
+			}
+		},
 		"annotations": [],
 		"lastPublishTime": "2022-08-04T05:20:37Z"
 	},
