@@ -9,7 +9,7 @@
 					{
 						"activity": "Copy data1",
 						"dependencyConditions": [
-							"Completed"
+							"Succeeded"
 						]
 					}
 				],
@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"variableName": "activity",
 					"value": {
-						"value": "@activity('Copy data1').error.message",
+						"value": "@activity('Copy data1').Status",
 						"type": "Expression"
 					}
 				}
