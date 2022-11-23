@@ -10,8 +10,9 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobStorageLocation",
-				"folderPath": "Output",
-				"container": "sqltables"
+				"fileName": "abcd.csv",
+				"folderPath": "Input",
+				"container": "adfassignment"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
